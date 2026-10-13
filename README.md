@@ -1,80 +1,110 @@
-# Telegram bot for YouTube Shorts and TikTok profiles
+# TT Bot Downloader
 
-Локальный Python-бот на aiogram. Вы запускаете его на своем ПК, отправляете боту ссылку на YouTube-канал/Shorts или TikTok-профиль, выбираете 5 или 10 последних роликов, бот скачивает их через yt-dlp и отправляет в Telegram.
+Локальный Telegram-бот на Python и aiogram для загрузки роликов из YouTube Shorts, TikTok и Instagram. Бот запускается на вашем ПК: вы отправляете ссылку, выбираете качество и получаете видео обратно в Telegram.
 
-> Используйте бот только для контента, который вы имеете право скачивать, хранить, изменять и публиковать. В проекте нет функций обхода авторских проверок или блокировок платформ.
+> Используйте проект только для видео, на которые у вас есть право доступа, скачивания, хранения и публикации. Закрытый контент доступен только при входе в аккаунт, которому разрешён просмотр.
 
-## Что умеет
+## Возможности
 
-- Ссылки YouTube: `https://www.youtube.com/@channel`, `https://www.youtube.com/@channel/shorts`, `https://www.youtube.com/channel/...`
-- Ссылки TikTok: `https://www.tiktok.com/@user`
-- Выбор 5 или 10 последних видео.
-- Переключение качества: `low`, `medium`, `high`.
-- Автоудаление временных файлов после отправки.
-- Опциональная обработка ваших собственных видео: сжатие и водяной знак, если установлен `ffmpeg`.
-- Поддержка `cookies.txt` для аккаунтов/контента, к которому у вас есть доступ.
+- Загрузка одного ролика по ссылке из YouTube, TikTok или Instagram.
+- Загрузка 5 или 10 последних роликов с YouTube-канала или TikTok-профиля.
+- Поддержка YouTube Shorts, обычных YouTube-видео, TikTok-видео, Instagram Reels и публикаций.
+- Три режима качества: низкое, среднее и высокое.
+- Отправка скачанного видео в Telegram с увеличенным тайм-аутом для нестабильной сети.
+- Сохранение файлов на ПК, если Telegram не смог принять видео.
+- Автоудаление временных файлов после успешной отправки.
+- Обработка собственных роликов: сжатие и водяной знак.
+- Поддержка cookies из Chrome, Edge, Firefox и других браузеров для аккаунтов, к которым у вас есть доступ.
+- Русское меню Telegram: `/start`, `/settings`, `/help`, `/cancel`.
 
-## Установка в PyCharm
+## Поддерживаемые ссылки
 
-1. Откройте папку проекта `shorts_tiktok_bot` в PyCharm.
-2. Создайте виртуальное окружение Python 3.11+.
-3. В терминале PyCharm выполните:
-
-```bash
-pip install -r requirements.txt
+```text
+https://www.youtube.com/@channel/shorts
+https://www.youtube.com/watch?v=VIDEO_ID
+https://www.youtube.com/shorts/VIDEO_ID
+https://www.tiktok.com/@user
+https://www.tiktok.com/@user/video/VIDEO_ID
+https://www.instagram.com/reel/POST_ID
+https://www.instagram.com/p/POST_ID
 ```
 
+## Быстрый запуск в Windows
+
+1. Установите Python 3.11 или новее.
+2. Откройте папку проекта в PyCharm.
+3. Запустите `setup_windows.bat` двойным щелчком или выполните его в терминале PyCharm.
 4. Скопируйте `.env.example` в `.env`.
-5. Создайте бота через Telegram `@BotFather` и вставьте токен в `.env`:
+5. Создайте бота через [@BotFather](https://t.me/BotFather) и вставьте его токен в `.env`.
+6. Выберите интерпретатор проекта:
 
-```env
-BOT_TOKEN=123456789:YOUR_TOKEN
+```text
+.venv\Scripts\python.exe
 ```
 
-6. Запустите `main.py`.
+7. Запустите `main.py`.
+
+Можно выполнить установку вручную:
+
+```powershell
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+```
 
 ## Настройки `.env`
 
 ```env
-BOT_TOKEN=...
+BOT_TOKEN=PASTE_YOUR_BOT_TOKEN_HERE
 MAX_UPLOAD_MB=49
 DOWNLOAD_DIR=downloads
 DEFAULT_VIDEO_COUNT=5
 DEFAULT_QUALITY=medium
 CLEANUP_AFTER_SEND=true
+
+# Необязательно: cookies.txt для контента, к которому у вас есть доступ.
 YTDLP_COOKIES_FILE=
+
+# Необязательно: браузер, в котором вы уже вошли в TikTok/Instagram.
+# Примеры: chrome, edge, firefox, brave или chrome:Default
+YTDLP_COOKIES_FROM_BROWSER=
+
+# Необязательная обработка собственных роликов.
 PROCESS_OWN_VIDEOS=false
 WATERMARK_TEXT=
+
+# Необязательно: прокси для соединения бота с Telegram.
+TELEGRAM_PROXY=
 ```
-
-`PROCESS_OWN_VIDEOS=true` включает законную обработку ваших собственных роликов: уменьшение размера и, если задан `WATERMARK_TEXT`, добавление водяного знака. Для этого должен быть установлен `ffmpeg`.
-
-## Команды бота
-
-- `/start` - старт и текущие настройки.
-- `/settings` - кнопки настроек.
-- `/help` - помощь.
-- `/cancel` - отменить ожидающую ссылку.
 
 ## Как пользоваться
 
-1. Запустите `main.py`.
-2. Откройте своего бота в Telegram.
-3. Отправьте ссылку на канал/профиль.
-4. Нажмите `Download 5` или `Download 10`.
+1. Откройте бота в Telegram и отправьте `/start`.
+2. Отправьте ссылку на ролик, канал или профиль.
+3. Для отдельного ролика нажмите `Скачать видео`.
+4. Для профиля или канала выберите 5 или 10 последних видео.
+5. Откройте `/settings`, чтобы изменить качество, очистку файлов или водяной знак.
 
-## Если YouTube или TikTok не скачивается
+## Доступ к закрытым аккаунтам
 
-- Обновите yt-dlp:
+TikTok и Instagram могут не отдавать ролики гостевому запросу. Если вы уже вошли в аккаунт через браузер и он имеет доступ к нужному контенту, добавьте в `.env`:
 
-```bash
-pip install -U "yt-dlp[default,curl-cffi]"
+```env
+YTDLP_COOKIES_FROM_BROWSER=chrome
 ```
 
-- Проверьте, что ссылка открывается в браузере.
-- Для контента, который доступен только вашему аккаунту, экспортируйте cookies в `cookies.txt` и укажите путь в `YTDLP_COOKIES_FILE`.
-- TikTok иногда меняет защиту и может временно требовать обновления yt-dlp.
+После изменения перезапустите `main.py`. Бот не обходит приватность аккаунтов и ограничения платформ.
 
-## Ограничение размера Telegram
+## Ограничение Telegram
 
-Если файл больше `MAX_UPLOAD_MB`, бот не отправит его как видео, а покажет локальный путь и ссылку на исходник. Для коротких роликов обычно хватает качества `medium` или `low`.
+По умолчанию бот отправляет файлы до 49 МБ. Если размер видео больше, бот оставит его в папке `downloads` и покажет путь к файлу на ПК.
+
+## Структура проекта
+
+```text
+app/
+  bot.py          # Telegram-обработчики и интерфейс
+  downloader.py   # Работа с yt-dlp
+  video_tools.py  # Водяной знак и сжатие
+  config.py       # Чтение настроек .env
+main.py           # Точка запуска
+requirements.txt  # Зависимости Python
+```
